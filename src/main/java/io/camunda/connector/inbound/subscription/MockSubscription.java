@@ -13,11 +13,14 @@ public class MockSubscription {
   private final static Logger LOG = LoggerFactory.getLogger(MockSubscription.class);
 
   private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-  private final EventGenerator generator = new EventGenerator();
+  private final EventGenerator generator;
 
-  public MockSubscription(Consumer<MockSubscriptionEvent> callback) {
+  public MockSubscription(String sender, int messagesPerMinute, Consumer<MockSubscriptionEvent> callback) {
     LOG.info("Activating mock subscription");
-    executor.scheduleAtFixedRate(() -> produceEvent(callback), 5, 10, TimeUnit.SECONDS);
+    generator = new EventGenerator(sender);
+    executor.scheduleAtFixedRate(
+        () ->
+            produceEvent(callback), 5, 60 / messagesPerMinute, TimeUnit.SECONDS);
   }
 
   public void stop() {
@@ -32,13 +35,16 @@ public class MockSubscription {
   }
 
   private static class EventGenerator {
-    private final String[] SENDERS = {"Alice", "Bob", "Charlie", "Dave"};
+    private final String sender;
     private final int MAX_CODE = 10;
+
+    EventGenerator(String sender) {
+      this.sender = sender;
+    }
 
     private final Random random = new Random();
 
     public MockSubscriptionEvent getRandomEvent() {
-      String sender = SENDERS[random.nextInt(SENDERS.length)];
       int code = random.nextInt(MAX_CODE);
       String message = UUID.randomUUID().toString();
       return new MockSubscriptionEvent(sender, code, message);

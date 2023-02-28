@@ -3,33 +3,35 @@ package io.camunda.connector.inbound;
 import io.camunda.connector.api.annotation.InboundConnector;
 import io.camunda.connector.api.inbound.InboundConnectorContext;
 import io.camunda.connector.api.inbound.InboundConnectorExecutable;
-import io.camunda.connector.impl.inbound.InboundConnectorProperties;
 import io.camunda.connector.inbound.subscription.MockSubscription;
 import io.camunda.connector.inbound.subscription.MockSubscriptionEvent;
 
-@InboundConnector(name = "MYINBOUNDCONNECTOR", type = "io.camunda:template.inbound:1")
+@InboundConnector(name = "MYINBOUNDCONNECTOR", type = "io.camunda:mytestinbound:1")
 public class MyConnectorExecutable implements InboundConnectorExecutable {
 
   private MockSubscription subscription;
   private InboundConnectorContext connectorContext;
-  private InboundConnectorProperties properties;
 
   @Override
-  public void activate(InboundConnectorProperties properties,
-      InboundConnectorContext connectorContext) {
+  public void activate(InboundConnectorContext connectorContext) {
+    MyConnectorProperties props = connectorContext.getPropertiesAsType(MyConnectorProperties.class);
 
-    this.properties = properties;
+    connectorContext.replaceSecrets(props);
+    connectorContext.validate(props);
+
     this.connectorContext = connectorContext;
-    subscription = new MockSubscription(this::onEvent);
+
+    subscription = new MockSubscription(
+        props.getSender(), props.getMessagesPerMinute(), this::onEvent);
   }
 
   @Override
-  public void deactivate(InboundConnectorProperties properties) {
+  public void deactivate() {
     subscription.stop();
   }
 
   private void onEvent(MockSubscriptionEvent rawEvent) {
     MyConnectorEvent connectorEvent = new MyConnectorEvent(rawEvent);
-    connectorContext.correlate(properties.getCorrelationPoint(), connectorEvent);
+    connectorContext.correlate(connectorEvent);
   }
 }

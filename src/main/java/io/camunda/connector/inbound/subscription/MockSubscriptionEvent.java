@@ -2,6 +2,9 @@ package io.camunda.connector.inbound.subscription;
 
 import java.util.Objects;
 
+/**
+ * Data model of an event consumed by inbound Connector (e.g. originating from an external system)
+ */
 public class MockSubscriptionEvent {
   private final String sender;
   private final int code;
