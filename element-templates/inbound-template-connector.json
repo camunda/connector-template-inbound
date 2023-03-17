@@ -1,0 +1,58 @@
+{
+  "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+  "name": "Test inbound connector",
+  "id": "io.camunda.connectors.inboundtest.1",
+  "version": 1,
+  "description": "Emulates subscription",
+  "documentationRef": "https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/http-webhook/",
+  "category": {
+    "id": "connectors",
+    "name": "Connectors"
+  },
+  "appliesTo": [
+    "bpmn:StartEvent"
+  ],
+  "elementType": {
+    "value": "bpmn:StartEvent"
+  },
+  "groups": [
+    {
+      "id": "config",
+      "label": "Connector Configuration"
+    }
+  ],
+  "properties": [
+    {
+      "type": "Hidden",
+      "value": "io.camunda:mytestinbound:1",
+      "binding": {
+        "type": "zeebe:property",
+        "name": "inbound.type"
+      }
+    },
+    {
+      "type": "String",
+      "label":"Frequency",
+      "feel": "optional",
+      "group":"config",
+      "description":"Messages per minute (1-10)",
+      "value": 3,
+      "binding": {
+        "type": "zeebe:property",
+        "name": "messagesPerMinute"
+      }
+    },
+    {
+      "type": "String",
+      "label":"Sender",
+      "feel": "optional",
+      "group":"endpoint",
+      "description":"Message sender name",
+      "value": "Alice",
+      "binding": {
+        "type": "zeebe:property",
+        "name": "sender"
+      }
+    }
+  ]
+}
