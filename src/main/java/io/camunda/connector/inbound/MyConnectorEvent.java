@@ -7,7 +7,7 @@ import java.util.Objects;
  * Data model of an event produced by the inbound Connector
  */
 public class MyConnectorEvent {
-  private MockSubscriptionEvent event;
+  private final MockSubscriptionEvent event;
 
   public MyConnectorEvent(MockSubscriptionEvent event) {
     this.event = event;
