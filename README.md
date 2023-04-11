@@ -1,4 +1,4 @@
-> A template for new C8 connectors.
+> A template for new C8 inbound Connectors.
 >
 > To use this template update the following resources to match the name of your connector:
 >
@@ -11,9 +11,9 @@
 > ...and delete this hint.
 
 
-# Connector Template
+# Inbound Connector Template
 
-Camunda Connector Template
+Camunda Inbound Connector Template
 
 ## Build
 
@@ -80,4 +80,4 @@ If necessary, you can adjust `application.properties` in test scope.
 
 ## Element Template
 
-The element templates can be found in the [element-templates/template-connector.json](element-templates/inbound-template-connector.json) file.
+The element templates can be found in the [element-templates/inbound-template-connector.json](element-templates/inbound-template-connector.json) file.
