@@ -14,11 +14,7 @@ public class MyConnectorExecutable implements InboundConnectorExecutable {
 
   @Override
   public void activate(InboundConnectorContext connectorContext) {
-    MyConnectorProperties props = connectorContext.getPropertiesAsType(MyConnectorProperties.class);
-
-    connectorContext.replaceSecrets(props);
-    connectorContext.validate(props);
-
+    MyConnectorProperties props = connectorContext.bindProperties(MyConnectorProperties.class);
     this.connectorContext = connectorContext;
 
     subscription = new MockSubscription(
