@@ -1,6 +1,5 @@
 package io.camunda.connector.inbound;
 
-import io.camunda.connector.api.annotation.Secret;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -9,7 +8,6 @@ import javax.validation.constraints.NotNull;
  * Configuration properties for inbound Connector
  */
 public class MyConnectorProperties {
-  @Secret
   @NotNull
   private String sender;
 
