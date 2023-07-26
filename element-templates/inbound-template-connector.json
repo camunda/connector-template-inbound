@@ -18,6 +18,10 @@
     {
       "id": "config",
       "label": "Connector Configuration"
+    },
+    {
+      "id": "output",
+      "label": "Output"
     }
   ],
   "properties": [
@@ -45,13 +49,36 @@
       "type": "String",
       "label":"Sender",
       "feel": "optional",
-      "group":"endpoint",
+      "group":"config",
       "description":"Message sender name",
       "value": "Alice",
       "binding": {
         "type": "zeebe:property",
         "name": "sender"
       }
+    },
+    {
+      "label": "Result variable",
+      "type": "String",
+      "group": "output",
+      "optional": true,
+      "binding": {
+        "type": "zeebe:property",
+        "name": "resultVariable"
+      },
+      "description": "Name of variable to store the contents of the event"
+    },
+    {
+      "label": "Variable expression",
+      "type": "String",
+      "group": "output",
+      "feel": "required",
+      "optional": true,
+      "binding": {
+        "type": "zeebe:property",
+        "name": "resultExpression"
+      },
+      "description": "Expression to map elements of the event to process variables"
     }
   ]
 }
