@@ -58,7 +58,7 @@
       }
     },
     {
-      "label": "Event variable",
+      "label": "Result variable",
       "type": "String",
       "group": "output",
       "optional": true,
