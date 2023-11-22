@@ -6,28 +6,26 @@ import io.camunda.connector.api.inbound.InboundConnectorExecutable;
 import io.camunda.connector.inbound.subscription.MockSubscription;
 import io.camunda.connector.inbound.subscription.MockSubscriptionEvent;
 
-@InboundConnector(name = "MYINBOUNDCONNECTOR", type = "io.camunda:mytestinbound:1")
-public class MyConnectorExecutable implements InboundConnectorExecutable {
+@InboundConnector(name = "My Inbound Connector", type = "io.camunda:my-inbound-connector:1")
+public class MyConnectorExecutable implements InboundConnectorExecutable<InboundConnectorContext> {
 
   private MockSubscription subscription;
-  private InboundConnectorContext connectorContext;
+
+  private InboundConnectorContext context;
 
   @Override
   public void activate(InboundConnectorContext connectorContext) {
-    MyConnectorProperties props = connectorContext.bindProperties(MyConnectorProperties.class);
-    this.connectorContext = connectorContext;
+    this.context = connectorContext;
+    var props = connectorContext.bindProperties(MyConnectorProperties.class);
+    subscription = new MockSubscription(props.sender(), props.messagesPerMinute(), this::onEvent);
+  }
 
-    subscription = new MockSubscription(
-        props.getSender(), props.getMessagesPerMinute(), this::onEvent);
+  private void onEvent(MockSubscriptionEvent rawEvent) {
+    context.correlate(new MyConnectorEvent(rawEvent));
   }
 
   @Override
   public void deactivate() {
     subscription.stop();
-  }
-
-  private void onEvent(MockSubscriptionEvent rawEvent) {
-    MyConnectorEvent connectorEvent = new MyConnectorEvent(rawEvent);
-    connectorContext.correlate(connectorEvent);
   }
 }

@@ -10,17 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MockSubscription {
-  private final static Logger LOG = LoggerFactory.getLogger(MockSubscription.class);
-
+  private static final Logger LOG = LoggerFactory.getLogger(MockSubscription.class);
   private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
   private final EventGenerator generator;
 
-  public MockSubscription(String sender, int messagesPerMinute, Consumer<MockSubscriptionEvent> callback) {
+  public MockSubscription(
+      String sender, int messagesPerMinute, Consumer<MockSubscriptionEvent> callback) {
     LOG.info("Activating mock subscription");
     generator = new EventGenerator(sender);
     executor.scheduleAtFixedRate(
-        () ->
-            produceEvent(callback), 5, 60 / messagesPerMinute, TimeUnit.SECONDS);
+        () -> produceEvent(callback), 5, 60 / messagesPerMinute, TimeUnit.SECONDS);
   }
 
   public void stop() {
@@ -36,7 +35,6 @@ public class MockSubscription {
 
   private static class EventGenerator {
     private final String sender;
-    private final int MAX_CODE = 10;
 
     EventGenerator(String sender) {
       this.sender = sender;
@@ -45,6 +43,7 @@ public class MockSubscription {
     private final Random random = new Random();
 
     public MockSubscriptionEvent getRandomEvent() {
+      int MAX_CODE = 10;
       int code = random.nextInt(MAX_CODE);
       String message = UUID.randomUUID().toString();
       return new MockSubscriptionEvent(sender, code, message);
