@@ -14,7 +14,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- connectors version -->
-    <version.connectors>8.5.0-SNAPSHOT</version.connectors>
+    <version.connectors>8.5.0</version.connectors>
 
     <!-- external libraries -->
     <version.assertj>3.25.3</version.assertj>
