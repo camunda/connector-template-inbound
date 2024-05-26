@@ -17,7 +17,7 @@
     <version.connectors>8.5.2</version.connectors>
 
     <!-- external libraries -->
-    <version.assertj>3.25.3</version.assertj>
+    <version.assertj>3.26.0</version.assertj>
     <version.junit-jupiter>5.10.2</version.junit-jupiter>
     <version.mockito>5.12.0</version.mockito>
     <version.slf4j>2.0.13</version.slf4j>
