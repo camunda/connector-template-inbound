@@ -79,13 +79,13 @@
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>connector-core</artifactId>
-      <version>8.7.0-SNAPSHOT</version>
+      <version>8.7.0-alpha3</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>connector-test</artifactId>
-      <version>8.7.0-SNAPSHOT</version>
+      <version>8.7.0-alpha3</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -149,7 +149,7 @@
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>spring-boot-starter-camunda-connectors</artifactId>
-      <version>8.7.0-SNAPSHOT</version>
+      <version>8.7.0-alpha3</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -159,10 +159,6 @@
         <exclusion>
           <artifactId>spring-boot-starter-camunda-sdk</artifactId>
           <groupId>io.camunda</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>spring-core</artifactId>
-          <groupId>org.springframework</groupId>
         </exclusion>
         <exclusion>
           <artifactId>spring-boot-starter-web</artifactId>
@@ -186,6 +182,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.junit-jupiter>5.10.2</version.junit-jupiter>
-    <version.connectors>8.7.0-SNAPSHOT</version.connectors>
+    <version.connectors>8.7.0-alpha3</version.connectors>
   </properties>
 </project>
