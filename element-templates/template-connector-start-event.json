@@ -1,0 +1,98 @@
+{
+  "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+  "name" : "Template connector (Start Event)",
+  "id" : "io.camunda.connector.Template.v1:StartEvent",
+  "description" : "Describe this connector",
+  "metadata" : {
+    "keywords" : [ ]
+  },
+  "documentationRef" : "https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/available-connectors-overview/",
+  "version" : 1,
+  "category" : {
+    "id" : "connectors",
+    "name" : "Connectors"
+  },
+  "appliesTo" : [ "bpmn:StartEvent" ],
+  "elementType" : {
+    "value" : "bpmn:StartEvent"
+  },
+  "groups" : [ {
+    "id" : "properties",
+    "label" : "Properties"
+  }, {
+    "id" : "activation",
+    "label" : "Activation"
+  }, {
+    "id" : "output",
+    "label" : "Output mapping"
+  } ],
+  "properties" : [ {
+    "value" : "io.camunda:my-inbound-connector:1",
+    "binding" : {
+      "name" : "inbound.type",
+      "type" : "zeebe:property"
+    },
+    "type" : "Hidden"
+  }, {
+    "id" : "sender",
+    "label" : "Sender",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "properties",
+    "binding" : {
+      "name" : "sender",
+      "type" : "zeebe:property"
+    },
+    "type" : "String"
+  }, {
+    "id" : "messagesPerMinute",
+    "label" : "Message per minute",
+    "optional" : false,
+    "feel" : "optional",
+    "group" : "properties",
+    "binding" : {
+      "name" : "messagesPerMinute",
+      "type" : "zeebe:property"
+    },
+    "type" : "String"
+  }, {
+    "id" : "activationCondition",
+    "label" : "Activation condition",
+    "description" : "Condition under which the Connector triggers. Leave empty to catch all events",
+    "optional" : true,
+    "feel" : "required",
+    "group" : "activation",
+    "binding" : {
+      "name" : "activationCondition",
+      "type" : "zeebe:property"
+    },
+    "type" : "String"
+  }, {
+    "id" : "resultVariable",
+    "label" : "Result variable",
+    "description" : "Name of variable to store the response in",
+    "group" : "output",
+    "binding" : {
+      "name" : "resultVariable",
+      "type" : "zeebe:property"
+    },
+    "type" : "String"
+  }, {
+    "id" : "resultExpression",
+    "label" : "Result expression",
+    "description" : "Expression to map the response into process variables",
+    "feel" : "required",
+    "group" : "output",
+    "binding" : {
+      "name" : "resultExpression",
+      "type" : "zeebe:property"
+    },
+    "type" : "Text"
+  } ],
+  "icon" : {
+    "contents" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMTgiIHdpZHRoPSIxOCIgdmlld0JveD0iMCAwIDEwIDEwIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+PHRpdGxlPlNsYWNrPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMCwwIEwwLDEwIEwxMCwxMCBMMTAsMCB6IiBmaWxsPSIjZWNiMTJmIi8+PC9nPjwvc3ZnPg=="
+  }
+}
