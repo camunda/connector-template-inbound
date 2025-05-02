@@ -39,12 +39,9 @@ cd camunda-local && docker compose -f docker-compose-core.yaml down
 Attempts run run shaded JAR locally - do not work yet
 
 ```bash
-cd /home/andriy/projects/connector-template-inbound ; /usr/bin/env /home/andriy/.sdkman/candidates/java/21.0.3-tem/bin/java io.camunda.connector.inbound.LocalConnectorRuntime 
-asdasdf
 java -cp target/*:target/dependency/* io.camunda.connector.inbound.MyConnectorExecutable 
 java -cp target/*.jar:target/dependency/*.jar io.camunda.connector.inbound.LocalConnectorRuntime 
 java  -cp "./target/connector-template-inbound-0.1.0-SNAPSHOT-with-dependencies.jar:/target/dependency/*" "io.camunda.connector.runtime.app.ConnectorRuntimeApplication"
-
 ```
 
 What we're looking for: Inbound connector io.camunda:my-inbound-connector:1 activated with deduplication ID
