@@ -30,6 +30,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.camunda.connector</groupId>
+            <artifactId>connector-validation</artifactId>
+            <version>${version.connectors}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Element template generator annotations (compile-time only) -->
         <dependency>
             <groupId>io.camunda.connector</groupId>
@@ -68,15 +75,162 @@
 
         <!-- for testing connectors locally in bundle with runtime -->
         <dependency>
-            <groupId>io.camunda.connector</groupId>
-            <artifactId>spring-boot-starter-camunda-connectors</artifactId>
-            <version>${version.connectors}</version>
-            <scope>test</scope>
+        <groupId>io.camunda.connector</groupId>
+        <artifactId>spring-boot-starter-camunda-connectors</artifactId>
+        <version>${version.connectors}</version>
+        <scope>test</scope>
+        <exclusions>
+            <exclusion>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            </exclusion>
+        </exclusions>
         </dependency>
+
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter</artifactId>
+          <version>3.4.5</version>
+        </dependency>
+
+        <!-- <dependency>
+            <groupId>io.camunda.spring</groupId>
+            <artifactId>spring-boot-starter-camunda</artifactId>
+            <version>8.5.18</version>
+        </dependency> -->
 
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.4.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.14.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.4.2</version>
+                    <configuration>
+                        <useDefaultManifestFile>false</useDefaultManifestFile>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.1.4</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <shadedArtifactAttached>true</shadedArtifactAttached>
+                        <shadedClassifierName>with-dependencies</shadedClassifierName>
+                        <!-- no need for this since we are not consuming this artifact downstream -->
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                            <exclude>module-info.class</exclude>
+                            <exclude>META-INF/MANIFEST.MF</exclude>
+                            <exclude>META-INF/*.SF</exclude>
+                            <exclude>META-INF/*.DSA</exclude>
+                            <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                        </filters>
+                        <transformers>
+                        <!-- This is needed if you have dependencies that use Service Loader. Most Google Cloud client libraries does. -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                        <!-- This is needed to not repeat licenses in the META-INF directory -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
+                        <!-- This is needed to merge existing NOTICE files and keep them downstream -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+                            <addHeader>false</addHeader>
+                        </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"/>
+                        </transformers>
+                        <!-- Uncomment and adjust to use relocations inside your JAR -->
+                        <!--<relocations>
+                        <relocation>
+                            <pattern>com.fasterxml.jackson</pattern>
+                            <shadedPattern>myconnector.com.fasterxml.jackson</shadedPattern>
+                        </relocation>
+                        </relocations>-->
+                    </configuration>
+                    <executions>
+                        <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>io.camunda.connector</groupId>
+                    <artifactId>element-template-generator-maven-plugin</artifactId>
+                    <version>${version.connectors}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>generate-templates</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <connectors>
+                            <connector>
+                                <connectorClass>io.camunda.connector.inbound.MyConnectorExecutable</connectorClass>
+                                <files>
+                                    <file>
+                                        <templateId>io.camunda.connectors.inbound.EmailMessageStartEvent.v1</templateId>
+                                        <templateFileName>email-inbound-connector-start-event.json</templateFileName>
+                                    </file>
+                                    <file>
+                                        <templateId>io.camunda.connectors.inbound.EmailIntermediate.v1</templateId>
+                                        <templateFileName>email-inbound-connector-intermediate.json</templateFileName>
+                                    </file>
+                                    <file>
+                                        <templateId>io.camunda.connectors.inbound.EmailBoundary.v1</templateId>
+                                        <templateFileName>email-inbound-connector-boundary.json</templateFileName>
+                                    </file>
+                                </files>
+                            </connector>
+                        </connectors>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,40 +244,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>io.camunda.connector</groupId>
-                <artifactId>element-template-generator-maven-plugin</artifactId>
-                <version>${version.connectors}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>generate-templates</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <connectors>
-                        <connector>
-                            <connectorClass>io.camunda.connector.inbound.MyConnectorExecutable</connectorClass>
-                            <files>
-                                <file>
-                                    <templateId>io.camunda.connectors.inbound.EmailMessageStartEvent.v1</templateId>
-                                    <templateFileName>email-inbound-connector-start-event.json</templateFileName>
-                                </file>
-                                <file>
-                                    <templateId>io.camunda.connectors.inbound.EmailIntermediate.v1</templateId>
-                                    <templateFileName>email-inbound-connector-intermediate.json</templateFileName>
-                                </file>
-                                <file>
-                                    <templateId>io.camunda.connectors.inbound.EmailBoundary.v1</templateId>
-                                    <templateFileName>email-inbound-connector-boundary.json</templateFileName>
-                                </file>
-                            </files>
-                        </connector>
-                    </connectors>
-                </configuration>
-            </plugin>
+
         </plugins>
     </build>
 

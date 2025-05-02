@@ -28,8 +28,26 @@ template)
 You can package the Connector by running the following command:
 
 ```bash
-mvn clean package
+mvn clean package -DskipTests
+docker buildx build --load -t connector-template-inbound:latest -f Dockerfile .
+
+cd camunda-local && docker compose -f docker-compose-core.yaml up -d
+cd camunda-local && docker compose -f docker-compose-core.yaml down
+
 ```
+
+Attempts run run shaded JAR locally - do not work yet
+
+```bash
+cd /home/andriy/projects/connector-template-inbound ; /usr/bin/env /home/andriy/.sdkman/candidates/java/21.0.3-tem/bin/java io.camunda.connector.inbound.LocalConnectorRuntime 
+asdasdf
+java -cp target/*:target/dependency/* io.camunda.connector.inbound.MyConnectorExecutable 
+java -cp target/*.jar:target/dependency/*.jar io.camunda.connector.inbound.LocalConnectorRuntime 
+java  -cp "./target/connector-template-inbound-0.1.0-SNAPSHOT-with-dependencies.jar:/target/dependency/*" "io.camunda.connector.runtime.app.ConnectorRuntimeApplication"
+
+```
+
+What we're looking for: Inbound connector io.camunda:my-inbound-connector:1 activated with deduplication ID
 
 This will create the following artifacts:
 
@@ -115,6 +133,11 @@ docker compose -f docker-compose-core.yaml up
 1. Install the Camunda Modeler if not already done.
 2. Add the `element-templates/template-connector-message-start-event.json` to your Modeler configuration as per
    the [Element Templates documentation](https://docs.camunda.io/docs/components/modeler/desktop-modeler/element-templates/configuring-templates/).
+
+  Linux
+  ```bash
+  cp ./element-templates/*.json ~/.config/camunda-modeler/resources/element-templates/
+  ```
 
 ### Launching Your Connector
 

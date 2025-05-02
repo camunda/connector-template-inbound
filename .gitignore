@@ -62,3 +62,5 @@ request*.json
 
 # MacOS indexes
 .DS_Store
+
+dependency-reduced-pom.xml
