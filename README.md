@@ -53,6 +53,32 @@ docker logs 'connectors' --follow
 make image-build
 ```
 
+## Start Docker Compose (uses previously build Connector Docker image)
+
+```bash
+make cmpose-up
+```
+
+## Observe container `connectors` logs
+
+Tail logs
+```bash
+make container-logs
+```
+
+or save as a file
+
+```bash
+docker logs --since=1h 'connectors' | tee connectors.log
+```
+
+## Stop Docker Compose
+
+```bash
+make cmpose-down
+```
+
+
 > To use this template update the following resources to match the name of your connector:
 >
 > * [README](./README.md) (title, description)
