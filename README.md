@@ -23,6 +23,21 @@ Camunda Inbound Connector Template
 Emulates a simple inbound connector function that start process X times per minutes(to be specified in the element
 template)
 
+### Copy templates to local [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
+
+Linux
+```bash
+cp ./element-templates/*.json ~/.config/camunda-modeler/resources/element-templates/
+```
+
+### Deploy and run BPMN with [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
+
+- Start [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
+- Open file `connector-template-inbound.bpmn`
+- Deploy diagram to "Camunda 8 Self-Managed": use a`space ship` pictogram in status bar), set `Cluster endpoint` to `http://localhost:26500` and `Authentication` as `None`
+- Start BPMN: `Start Current Diagram`- use an `arrow` pictogram in status bar
+
+
 ## Build
 
 You can package the Connector by running the following command:
@@ -33,12 +48,12 @@ docker buildx build --load -t connector-template-inbound:latest -f Dockerfile .
 
 cd camunda-local && docker compose -f docker-compose-core.yaml up -d
 cd camunda-local && docker compose -f docker-compose-core.yaml down
-
 ```
 
-Attempts run run shaded JAR locally - do not work yet
+Attempts run run shaded JAR locally - doe not work yet
 
 ```bash
+mvn clean dependency:copy-dependencies package install shade:shade -DskipTests
 java -cp target/*:target/dependency/* io.camunda.connector.inbound.MyConnectorExecutable 
 java -cp target/*.jar:target/dependency/*.jar io.camunda.connector.inbound.LocalConnectorRuntime 
 java  -cp "./target/connector-template-inbound-0.1.0-SNAPSHOT-with-dependencies.jar:/target/dependency/*" "io.camunda.connector.runtime.app.ConnectorRuntimeApplication"
@@ -131,10 +146,7 @@ docker compose -f docker-compose-core.yaml up
 2. Add the `element-templates/template-connector-message-start-event.json` to your Modeler configuration as per
    the [Element Templates documentation](https://docs.camunda.io/docs/components/modeler/desktop-modeler/element-templates/configuring-templates/).
 
-  Linux
-  ```bash
-  cp ./element-templates/*.json ~/.config/camunda-modeler/resources/element-templates/
-  ```
+
 
 ### Launching Your Connector
 
