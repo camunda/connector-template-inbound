@@ -1,27 +1,28 @@
 > A Connector template for new C8 inbound connector
 >
-> To use this template update the following resources to match the name of your connector:
->
-> * [README](./README.md) (title, description)
-> * [Element Template](./element-templates/template-connector-message-start-event.json)
-> * [POM](./pom.xml) (artifact name, id, description)
-> * [Connector Executable](src/main/java/io/camunda/connector/inbound/MyConnectorExecutable.java) (rename, implement,
-    update
-    `InboundConnector` annotation)
-> * [Service Provider Interface (SPI)](./src/main/resources/META-INF/services/io.camunda.connector.api.inbound.InboundConnectorExecutable) (
-    rename)
->
->
-> About [creating Connectors](https://docs.camunda.io/docs/components/connectors/custom-built-connectors/connector-sdk/#creating-a-custom-connector)
->
-> Check out the [Connectors SDK](https://github.com/camunda/connectors)
+## Pre-requisites
 
-# Connector Template
+* Linux
+* sdkman[https://sdkman.io/]
+  - Install [sdkman](https://sdkman.io/install)
+    ```bash
+    curl -s "https://get.sdkman.io" | bash
+    ```
+* JDK 21
+  - Install and use JDK
+    ```bash
+    sdk install java 21.0.7-tem
+    sdk use java 21.0.7-tem
+    ```
+* [Apache Maven](https://maven.apache.org/install.html)
+  - Install Apache Maven 
+    ```bash
+    sdk install maven 3.9.9
+    sdk use maven 3.9.9
+    ```    
+* [Docker](https://docs.docker.com/engine/install/)
 
-Camunda Inbound Connector Template
-
-Emulates a simple inbound connector function that start process X times per minutes(to be specified in the element
-template)
+## TDLR: Run a custom connector with Self-Manages Camunda 8.7
 
 ### Copy templates to local [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
 
@@ -38,20 +39,38 @@ cp ./element-templates/*.json ~/.config/camunda-modeler/resources/element-templa
 - Start BPMN: `Start Current Diagram`- use an `arrow` pictogram in status bar
 
 
-## Build
-
-You can package the Connector by running the following command:
+## Build Connector JAR 
 
 ```bash
-mvn clean package -DskipTests
-docker buildx build --load -t connector-template-inbound:latest -f Dockerfile .
-
-cd camunda-local && docker compose -f docker-compose-core.yaml up -d
-cd camunda-local && docker compose -f docker-compose-core.yaml down
-
+make build
 docker logs --since=1h 'connectors' | tee connectors.log
 docker logs 'connectors' --follow
 ```
+
+## Build Connector Docker Image 
+
+```bash
+make image-build
+```
+
+> To use this template update the following resources to match the name of your connector:
+>
+> * [README](./README.md) (title, description)
+> * [Element Template](./element-templates/template-connector-message-start-event.json)
+> * [POM](./pom.xml) (artifact name, id, description)
+> * [Connector Executable](src/main/java/io/camunda/connector/inbound/MyConnectorExecutable.java) (rename, implement, update `InboundConnector` annotation)
+> * [Service Provider Interface (SPI)](./src/main/resources/META-INF/services/io.camunda.connector.api.inbound.InboundConnectorExecutable) (rename)
+>
+> About [creating Connectors](https://docs.camunda.io/docs/components/connectors/custom-built-connectors/connector-sdk/#creating-a-custom-connector)
+>
+> Check out the [Connectors SDK](https://github.com/camunda/connectors)
+
+# Connector Template
+
+Camunda Inbound Connector Template
+
+Emulates a simple inbound connector function that start process X times per minutes(to be specified in the element
+template)
 
 Attempts run run shaded JAR locally - doe not work yet
 

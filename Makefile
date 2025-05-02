@@ -15,20 +15,23 @@ help:
 	@clear
 	@echo "Usage: make COMMAND"
 	@echo "Commands :"
-	@grep -E '[a-zA-Z\.\-]+:.*?@ .*$$' $(MAKEFILE_LIST)| tr -d '#' | awk 'BEGIN {FS = ":.*?@ "}; {printf "\033[32m%-16s\033[0m - %s\n", $$1, $$2}'
+	@grep -E '[a-zA-Z\.\-]+:.*?@ .*$$' $(MAKEFILE_LIST)| tr -d '#' | awk 'BEGIN {FS = ":.*?@ "}; {printf "\033[32m%-14s\033[0m - %s\n", $$1, $$2}'
 
 #clean: @ Cleanup
 clean:
 	@rm -rf target dependency-reduced-pom.xml
 
-#build: @ Build
-build: install
+#build: @ Build JAR
+build:
 	mvn clean package -DskipTests
-
-
+ 
 #image-build: @ Build a Docker image
 image-build: build
 	docker buildx build --load -t $(IMAGE_NAME):$(IMAGE_VERSION) -f Dockerfile .
+
+#container-logs: @ Docker Container logs
+container-logs:
+	docker logs 'connectors' --follow
 
 #compose-up: @ Docker Compose Up
 compose-up:
