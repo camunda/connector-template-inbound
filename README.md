@@ -24,7 +24,7 @@
 
 ## TDLR: Run a custom connector with Self-Managed Camunda 8.7
 
-### Copy templates to local [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
+### Make Connector's templates available to a localy installed [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
 
 Linux
 ```bash
