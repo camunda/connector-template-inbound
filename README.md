@@ -48,6 +48,9 @@ docker buildx build --load -t connector-template-inbound:latest -f Dockerfile .
 
 cd camunda-local && docker compose -f docker-compose-core.yaml up -d
 cd camunda-local && docker compose -f docker-compose-core.yaml down
+
+docker logs --since=1h 'connectors' | tee connectors.log
+docker logs 'connectors' --follow
 ```
 
 Attempts run run shaded JAR locally - doe not work yet
