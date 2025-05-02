@@ -1,5 +1,5 @@
-> A Connector template for new C8 inbound connector
->
+### A Connector template for new C8 inbound connector
+
 ## Pre-requisites
 
 * Linux
@@ -22,7 +22,7 @@
     ```    
 * [Docker](https://docs.docker.com/engine/install/)
 
-## TDLR: Run a custom connector with Self-Manages Camunda 8.7
+## TDLR: Run a custom connector with Self-Managed Camunda 8.7
 
 ### Copy templates to local [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
 
@@ -38,8 +38,7 @@ cp ./element-templates/*.json ~/.config/camunda-modeler/resources/element-templa
 - Deploy diagram to "Camunda 8 Self-Managed": use a`space ship` pictogram in status bar), set `Cluster endpoint` to `http://localhost:26500` and `Authentication` as `None`
 - Start BPMN: `Start Current Diagram`- use an `arrow` pictogram in status bar
 
-
-## Build Connector JAR 
+## Build Connector JAR
 
 ```bash
 make build
