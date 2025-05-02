@@ -22,13 +22,16 @@
     ```    
 * [Docker](https://docs.docker.com/engine/install/)
 * [git](https://git-scm.com/downloads)
-  ```bash
-  cd ~ && mkdir projects && cd projects
-  git clone git@github.com:AndriyKalashnykov/connector-template-inbound.git
-  cd ~/projects/connector-template-inbound
-  ```
 
 ## TDLR: Run a custom connector with Self-Managed Camunda 8.7
+
+### Clone this repo
+
+```bash
+cd ~ && mkdir projects && cd projects
+git clone git@github.com:AndriyKalashnykov/connector-template-inbound.git
+cd ~/projects/connector-template-inbound
+```
 
 ### Make Connector's templates available to a localy installed [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
 
