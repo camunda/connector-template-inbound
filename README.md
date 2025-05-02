@@ -26,7 +26,7 @@
   cd ~ && mkdir projects && cd projects
   git clone git@github.com:AndriyKalashnykov/connector-template-inbound.git
   cd ~/projects/connector-template-inbound
-```
+  ```
 
 ## TDLR: Run a custom connector with Self-Managed Camunda 8.7
 
