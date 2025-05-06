@@ -1,6 +1,7 @@
 package io.camunda.connector.inbound;
 
 import io.camunda.connector.api.annotation.InboundConnector;
+import io.camunda.connector.api.inbound.CorrelationRequest;
 import io.camunda.connector.api.inbound.InboundConnectorContext;
 import io.camunda.connector.api.inbound.InboundConnectorExecutable;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
@@ -33,7 +34,8 @@ public class MyConnectorExecutable implements InboundConnectorExecutable<Inbound
   }
 
   private void onEvent(MockSubscriptionEvent rawEvent) {
-    context.correlateWithResult(new MyConnectorEvent(rawEvent));
+    var event = new MyConnectorEvent(rawEvent);
+    context.correlate(CorrelationRequest.builder().variables(event).build());
   }
 
   @Override
