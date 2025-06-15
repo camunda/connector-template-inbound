@@ -1,9 +1,6 @@
 # Compiled class file
 *.class
 
-# Log file
-*.log
-
 # BlueJ files
 *.ctxt
 
@@ -62,3 +59,5 @@ request*.json
 
 # MacOS indexes
 .DS_Store
+
+dependency-reduced-pom.xml
