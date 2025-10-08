@@ -1,16 +1,99 @@
-> A Connector template for new C8 inbound connector
->
+### A Connector template for new C8 inbound connector
+
+## Pre-requisites
+
+* Linux
+* sdkman[https://sdkman.io/]
+  - Install [sdkman](https://sdkman.io/install)
+    ```bash
+    curl -s "https://get.sdkman.io" | bash
+    ```
+* JDK 21
+  - Install and use JDK
+    ```bash
+    sdk install java 21.0.7-tem
+    sdk use java 21.0.7-tem
+    ```
+* [Apache Maven](https://maven.apache.org/install.html)
+  - Install Apache Maven 
+    ```bash
+    sdk install maven 3.9.9
+    sdk use maven 3.9.9
+    ```    
+* [Docker](https://docs.docker.com/engine/install/)
+* [git](https://git-scm.com/downloads)
+
+## TDLR: Run a custom connector with Self-Managed Camunda 8.7
+
+### Clone this repo
+
+```bash
+cd ~ && mkdir projects && cd projects
+git clone git@github.com:AndriyKalashnykov/connector-template-inbound.git
+cd ~/projects/connector-template-inbound
+```
+
+### Make Connector's templates available to a localy installed [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
+
+Linux
+```bash
+cp ./element-templates/*.json ~/.config/camunda-modeler/resources/element-templates/
+```
+
+### Deploy and run BPMN with [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
+
+- Start local [Camunda Desktop Modeler](https://camunda.com/download/modeler/)
+- Open file [`connector-template-inbound.bpmn`](./connector-template-inbound.bpmn)
+- Deploy diagram to "Camunda 8 Self-Managed": use a`spaceship` pictogram in status bar), set `Cluster endpoint` to `http://localhost:26500` to `Authentication` to `None`
+- Start BPMN: `Start Current Diagram`- use an `arrow` pictogram in status bar
+
+## Build Connector JAR
+
+```bash
+make build
+docker logs --since=1h 'connectors' | tee connectors.log
+docker logs 'connectors' --follow
+```
+
+## Build Connector Docker Image 
+
+```bash
+make image-build
+```
+
+## Start Docker Compose (uses previously build Connector Docker image)
+
+```bash
+make cmpose-up
+```
+
+## Observe container `connectors` logs
+
+Tail logs
+```bash
+make container-logs
+```
+
+or save as a file
+
+```bash
+docker logs --since=1h 'connectors' | tee connectors.log
+```
+
+## Stop Docker Compose
+
+```bash
+make cmpose-down
+```
+
+
 > To use this template update the following resources to match the name of your connector:
 >
 > * [README](./README.md) (title, description)
 > * [Element Template](./element-templates/template-connector-message-start-event.json)
 > * [POM](./pom.xml) (artifact name, id, description)
-> * [Connector Executable](src/main/java/io/camunda/connector/inbound/MyConnectorExecutable.java) (rename, implement,
-    update
-    `InboundConnector` annotation)
-> * [Service Provider Interface (SPI)](./src/main/resources/META-INF/services/io.camunda.connector.api.inbound.InboundConnectorExecutable) (
-    rename)
->
+> * [Connector Executable](src/main/java/io/camunda/connector/inbound/MyConnectorExecutable.java) (rename, implement, update `InboundConnector` annotation)
+> * [Service Provider Interface (SPI)](./src/main/resources/META-INF/services/io.camunda.connector.api.inbound.InboundConnectorExecutable) (rename)
 >
 > About [creating Connectors](https://docs.camunda.io/docs/components/connectors/custom-built-connectors/connector-sdk/#creating-a-custom-connector)
 >
@@ -23,13 +106,16 @@ Camunda Inbound Connector Template
 Emulates a simple inbound connector function that start process X times per minutes(to be specified in the element
 template)
 
-## Build
-
-You can package the Connector by running the following command:
+Attempts run run shaded JAR locally - doe not work yet
 
 ```bash
-mvn clean package
+mvn clean dependency:copy-dependencies package install shade:shade -DskipTests
+java -cp target/*:target/dependency/* io.camunda.connector.inbound.MyConnectorExecutable 
+java -cp target/*.jar:target/dependency/*.jar io.camunda.connector.inbound.LocalConnectorRuntime 
+java  -cp "./target/connector-template-inbound-0.1.0-SNAPSHOT-with-dependencies.jar:/target/dependency/*" "io.camunda.connector.runtime.app.ConnectorRuntimeApplication"
 ```
+
+What we're looking for: Inbound connector io.camunda:my-inbound-connector:1 activated with deduplication ID
 
 This will create the following artifacts:
 
@@ -115,6 +201,8 @@ docker compose -f docker-compose-core.yaml up
 1. Install the Camunda Modeler if not already done.
 2. Add the `element-templates/template-connector-message-start-event.json` to your Modeler configuration as per
    the [Element Templates documentation](https://docs.camunda.io/docs/components/modeler/desktop-modeler/element-templates/configuring-templates/).
+
+
 
 ### Launching Your Connector
 
