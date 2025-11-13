@@ -1,12 +1,14 @@
 package io.camunda.connector.inbound;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import io.camunda.connector.api.inbound.CorrelationRequest;
-import io.camunda.connector.api.inbound.CorrelationResult;
 import io.camunda.connector.api.inbound.InboundConnectorContext;
+import java.time.Duration;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,9 +22,6 @@ class MyConnectorExecutableTest {
   @Mock
   private InboundConnectorContext context;
 
-  @Mock
-  private CorrelationResult correlationResult;
-
   private MyConnectorExecutable connector;
 
   @BeforeEach
@@ -30,12 +29,18 @@ class MyConnectorExecutableTest {
     connector = new MyConnectorExecutable();
   }
 
+  @AfterEach
+  void tearDown() {
+    if (connector != null) {
+      connector.deactivate();
+    }
+  }
+
   @Test
   void shouldActivateConnectorWithProperties() {
     // given
     var properties = new MyConnectorProperties("test-sender", 10);
     when(context.bindProperties(MyConnectorProperties.class)).thenReturn(properties);
-    when(context.correlate(any(CorrelationRequest.class))).thenReturn(correlationResult);
 
     // when
     connector.activate(context);
@@ -45,19 +50,19 @@ class MyConnectorExecutableTest {
   }
 
   @Test
-  void shouldCorrelateEventsSuccessfully() throws InterruptedException {
+  void shouldCorrelateEventsSuccessfully() {
     // given
-    var properties = new MyConnectorProperties("test-sender", 60); // 60 events per minute = 1 per second
+    var properties = new MyConnectorProperties("test-sender", 60); // 60 events per minute
     when(context.bindProperties(MyConnectorProperties.class)).thenReturn(properties);
-    when(context.correlate(any(CorrelationRequest.class))).thenReturn(correlationResult);
 
     // when
     connector.activate(context);
 
-    // wait for at least one event to be generated
-    Thread.sleep(1500);
+    // then - wait for at least one event to be generated (initial delay is 5 seconds)
+    await()
+        .atMost(Duration.ofSeconds(10))
+        .untilAsserted(() -> verify(context, atLeastOnce()).correlate(any(CorrelationRequest.class)));
 
-    // then
     ArgumentCaptor<CorrelationRequest> captor = ArgumentCaptor.forClass(CorrelationRequest.class);
     verify(context, atLeastOnce()).correlate(captor.capture());
 
@@ -68,29 +73,21 @@ class MyConnectorExecutableTest {
     MyConnectorEvent event = (MyConnectorEvent) request.getVariables();
     assertThat(event.event()).isNotNull();
     assertThat(event.event().sender()).isEqualTo("test-sender");
-
-    // cleanup
-    connector.deactivate();
   }
 
   @Test
-  void shouldHandleCorrelation() throws InterruptedException {
+  void shouldHandleCorrelation() {
     // given
     var properties = new MyConnectorProperties("test-sender", 60);
     when(context.bindProperties(MyConnectorProperties.class)).thenReturn(properties);
-    when(context.correlate(any(CorrelationRequest.class))).thenReturn(correlationResult);
 
     // when
     connector.activate(context);
 
-    // wait for at least one event to be generated
-    Thread.sleep(1500);
-
-    // then
-    verify(context, atLeastOnce()).correlate(any(CorrelationRequest.class));
-
-    // cleanup
-    connector.deactivate();
+    // then - wait for at least one event to be correlated
+    await()
+        .atMost(Duration.ofSeconds(10))
+        .untilAsserted(() -> verify(context, atLeastOnce()).correlate(any(CorrelationRequest.class)));
   }
 
   @Test
@@ -98,7 +95,6 @@ class MyConnectorExecutableTest {
     // given
     var properties = new MyConnectorProperties("test-sender", 10);
     when(context.bindProperties(MyConnectorProperties.class)).thenReturn(properties);
-    when(context.correlate(any(CorrelationRequest.class))).thenReturn(correlationResult);
 
     connector.activate(context);
 
