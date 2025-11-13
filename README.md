@@ -21,7 +21,7 @@
 When building an inbound connector, there are several important concepts to understand:
 
 - **Activation:** When a process definition with this connector is deployed. This is a synchronous operation, so long-running tasks should be started asynchronously.
-- **[Activation condition](https://docs.camunda.io/docs/components/connectors/use-connectors/#activation-condition):** A BPMN expression that must evaluate to true for the connector to be activated.
+- **[Activation condition](https://docs.camunda.io/docs/components/connectors/use-connectors/#activation-condition):** ⚠️ Do not mistaken with the Activation. An activation condition is a BPMN expression that must evaluate to true for the connector to correlate.
 - **Deactivation:** When the process definition is deleted or a new version is deployed. Use this to clean up resources.
 - **[Correlation](https://docs.camunda.io/docs/components/connectors/use-connectors/#correlation):** Matches incoming events to waiting process instances using correlation keys.
 - **[Deduplication](https://docs.camunda.io/docs/components/connectors/use-connectors/inbound/#connector-deduplication):** Sometimes you might want to have multiple BPMN elements listening to the same event source. For example, you might want to link multiple connector events to the same message queue consumer and activate only one of them based on the message content.
