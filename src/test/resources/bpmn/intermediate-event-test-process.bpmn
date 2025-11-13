@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0fcwfm5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.39.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.7.0">
+  <bpmn:process id="intermediate-event-test-process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1et7zop</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1et7zop" sourceRef="StartEvent_1" targetRef="Event_1gon23s" />
+    <bpmn:endEvent id="Event_0skslcn">
+      <bpmn:incoming>Flow_1r9tkqk</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1r9tkqk" sourceRef="Event_1gon23s" targetRef="Event_0skslcn" />
+    <bpmn:intermediateCatchEvent id="Event_1gon23s" name="MyConnector" zeebe:modelerTemplate="io.camunda.connector.Template.v1:IntermediateCatchEvent" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMTgiIHdpZHRoPSIxOCIgdmlld0JveD0iMCAwIDEwIDEwIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+PHRpdGxlPlNsYWNrPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMCwwIEwwLDEwIEwxMCwxMCBMMTAsMCB6IiBmaWxsPSIjZWNiMTJmIi8+PC9nPjwvc3ZnPg==">
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property name="inbound.type" value="io.camunda:my-inbound-connector:1" />
+          <zeebe:property name="sender" value="theSenderId" />
+          <zeebe:property name="messagesPerMinute" value="10" />
+          <zeebe:property name="correlationKeyExpression" value="=event.sender" />
+          <zeebe:property name="resultVariable" value="allResult" />
+          <zeebe:property name="resultExpression" value="={&#34;sender&#34;: event.sender}" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1et7zop</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r9tkqk</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1h9m3k0" messageRef="Message_0d03f5e" />
+    </bpmn:intermediateCatchEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_0d03f5e" name="4ce6e93c-e4ad-42b8-8df4-62c34de2cf11" zeebe:modelerTemplate="io.camunda.connector.Template.v1:IntermediateCatchEvent">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=expectedSender" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0hksn24">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0skslcn_di" bpmnElement="Event_0skslcn">
+        <dc:Bounds x="682" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15f5snt_di" bpmnElement="Event_1gon23s">
+        <dc:Bounds x="412" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1et7zop_di" bpmnElement="Flow_1et7zop">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="412" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r9tkqk_di" bpmnElement="Flow_1r9tkqk">
+        <di:waypoint x="448" y="120" />
+        <di:waypoint x="682" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
