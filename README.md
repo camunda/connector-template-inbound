@@ -16,6 +16,21 @@
 >
 > Check out the [Connectors SDK](https://github.com/camunda/connectors)
 
+# Important concepts
+
+When building an inbound connector, there are several important concepts to understand:
+
+- **Activation:** When a process definition with this connector is deployed. This is a synchronous operation, so long-running tasks should be started asynchronously.
+- **[Activation condition](https://docs.camunda.io/docs/components/connectors/use-connectors/#activation-condition):** ⚠️ Do not mistaken with the Activation. An activation condition is a BPMN expression that must evaluate to true for the connector to correlate.
+- **Deactivation:** When the process definition is deleted or a new version is deployed. Use this to clean up resources.
+- **[Correlation](https://docs.camunda.io/docs/components/connectors/use-connectors/#correlation):** Matches incoming events to waiting process instances using correlation keys.
+- **[Deduplication](https://docs.camunda.io/docs/components/connectors/use-connectors/inbound/#connector-deduplication):** Sometimes you might want to have multiple BPMN elements listening to the same event source. For example, you might want to link multiple connector events to the same message queue consumer and activate only one of them based on the message content.
+- **[Message ID](https://docs.camunda.io/docs/components/connectors/use-connectors/#message-id-expression):** Used for deduplication - events with the same message ID are processed only once.
+
+For more details, see the [Inbound Connector SDK documentation](https://docs.camunda.io/docs/components/connectors/custom-built-connectors/connector-sdk).
+
+We strongly recommend reading through the [Messages documentation](https://docs.camunda.io/docs/components/concepts/messages/) as Inbound connectors rely heavily on the concepts explained there.
+
 # Connector Template
 
 Camunda Inbound Connector Template
@@ -46,6 +61,12 @@ that are used in other Connectors and
 the [Connector Runtime](https://github.com/camunda/connectors).
 This helps to avoid classpath conflicts when the Connector is executed.
 
+For example, without shading, you might encounter errors like:
+```
+java.lang.NoSuchMethodError: com.fasterxml.jackson.databind.ObjectMapper.setserializationInclusion(Lcom/fasterxml/jackson/annotation/JsonInclude$Include;)Lcom/fasterxml/jackson/databind/ObjectMapper;
+```
+This occurs when your connector and the runtime use different versions of the same library (e.g., Jackson).
+
 Use the `relocations` configuration in the Maven Shade plugin to define the dependencies that should be shaded.
 The [Maven Shade documentation](https://maven.apache.org/plugins/maven-shade-plugin/examples/class-relocation.html)
 provides more details on relocations.
@@ -71,66 +92,62 @@ provides more details on relocations.
 }
 ```
 
-## Test locally
+## Testing
+### Unit and Integration Tests
 
-Run unit tests
-
+You can run the unit and integration tests by executing the following Maven command:
 ```bash
 mvn clean verify
 ```
 
-### Test with local runtime
+### Local environment
 
-To ensure the seamless functionality of your custom Camunda connector, please follow the steps below:
-
-#### Prerequisites:
-
+#### Prerequisites
+You will need the following tools installed on your machine:
 1. Camunda Modeler, which is available in two variants:
     - [Desktop Modeler](https://camunda.com/download/modeler/) for a local installation.
-    - [Web Modeler](https://camunda.com/download/modeler/) for an online experience.
+    - [Web Modeler](https://modeler.camunda.io/) for an online experience.
 
 2. [Docker](https://www.docker.com/products/docker-desktop), which is required to run the Camunda platform.
 
-#### Setting Up the Environment:
+#### Setting Up the Camunda platform
 
-1. Clone the Camunda Platform repository from GitHub:
+The Connectors Runtime requires a running Camunda platform to interact with. To set up a local Camunda environment, follow these steps:
 
-```shell
-git clone https://github.com/camunda/camunda-platform.git
-```
-
-Navigate to the cloned directory and open docker-compose-core.yaml with your preferred text editor.
-
-Locate the connector image section and comment it out using the # symbol, as you will be executing your connector
-locally.
-
-Initiate the Camunda suite with the following Docker command:
+1. Clone the [Camunda distributions repository](https://github.com/camunda/camunda-distributions) from GitHub and navigate to the Camunda 8.8 docker-compose directory:
 
 ```shell
-docker compose -f docker-compose-core.yaml up
+git clone git@github.com:camunda/camunda-distributions.git
+cd cd docker-compose/versions/camunda-8.8
 ```
 
-### Configuring Camunda Modeler
+**Note:** This template is compatible with Camunda 8.8. Using other versions may lead to compatibility issues.
 
-1. Install the Camunda Modeler if not already done.
-2. Add the `element-templates/template-connector-message-start-event.json` to your Modeler configuration as per
+Either comment out the connectors service, or use the `--scale` flag to exclude it:
+
+```shell
+docker compose -f docker-compose-core.yaml up --scale connectors=0
+```
+
+#### Configure the Desktop Modeler and Use Your Connector
+
+Add the `element-templates/template-connector-message-start-event.json` to your Modeler configuration as per
    the [Element Templates documentation](https://docs.camunda.io/docs/components/modeler/desktop-modeler/element-templates/configuring-templates/).
 
-### Launching Your Connector
+#### Using Your Connector
+Then, to use your connector in a local Camunda environment, follow these steps:
 
-1. Run `io.camunda.example.LocalConnectorRuntime` to start your connector.
-2. Create and initiate a process that utilizes your newly created connector within the Camunda Modeler. ![Connector in Camunda Modeler](img/img.png)
-3. Verify that the process is running smoothly by accessing Camunda Operate at [localhost:8081](http://localhost:8081).
+1. Run `io.camunda.connector.inbound.LocalConnectorRuntime` to start your connector.
+2. Open the Camunda Desktop Modeler and create a new BPMN diagram.
+3. Design a process that incorporates your newly created connector.
+4. Deploy the process to your local Camunda platform.
+3. Verify that the process is running smoothly by accessing Camunda Operate at [localhost:8088/operate](http://localhost:8088/operate). Username and password are both `demo`.
 
-Follow these instructions to test and use your custom Camunda connector effectively.
+### SaaS environment
 
-### Test with SaaS
+#### Creating an API Client
 
-#### Prerequisites:
-
-None required.
-
-#### Setting Up the Environment:
+The Connectors Runtime (LocalConnectorRuntime) requires connection details to interact with your Camunda SaaS cluster. To set this up, follow these steps:
 
 1. Navigate to Camunda [SaaS](https://console.camunda.io).
 2. Create a cluster using the latest version available.
@@ -139,16 +156,15 @@ None required.
 5. Copy the configuration details displayed under the `Spring Boot` tab.
 6. Paste the copied configuration into your `application.properties` file within your project.
 
-### Launching Your Connector
+#### Using Your Connector
 
 1. Start your connector by executing `io.camunda.connector.inbound.LocalConnectorRuntime` in your development
    environment.
 2. Access the Web Modeler and create a new project.
 3. Click on `Create new`, then select `Upload files`. Upload the connector template from the repository you have.
-4. In the same folder, create a new BPMN diagram.
-5. Design and start a process that incorporates your new connector.
-
-By adhering to these steps, you can validate the integration of your custom Camunda connector with the SaaS environment.
+4. After uploading, **publish the connector template** by clicking the Publish button.
+5. In the same folder, create a new BPMN diagram.
+6. Design and start a process that incorporates your new connector.
 
 ## Element Template
 
@@ -159,4 +175,4 @@ the [Element Template Generator](https://github.com/camunda/connectors/tree/main
 The generation is embedded in the Maven build and can be triggered by running `mvn clean package`.
 
 The generated element template can be found
-in [element-templates/template-connector.json](./element-templates/template-connector-message-start-event.json).
+in [element-templates/template-connector-message-start-event.json](./element-templates/template-connector-message-start-event.json).
