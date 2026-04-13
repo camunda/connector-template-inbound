@@ -1,6 +1,7 @@
 package io.camunda.connector.inbound;
 
 import io.camunda.connector.generator.dsl.Property;
+import io.camunda.connector.generator.java.annotation.FeelMode;
 import io.camunda.connector.generator.java.annotation.TemplateProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -19,13 +20,13 @@ public record MyConnectorProperties(
             label = "Sender",
             group = "properties",
             binding = @TemplateProperty.PropertyBinding(name = "sender"),
-            feel = Property.FeelMode.optional)
+            feel = FeelMode.optional)
     String sender,
     @TemplateProperty(
             id = "messagesPerMinute",
             label = "Message per minute",
             group = "properties",
             binding = @TemplateProperty.PropertyBinding(name = "messagesPerMinute"),
-            feel = Property.FeelMode.optional)
+            feel = FeelMode.optional)
     @Max(10) @Min(1) int messagesPerMinute
 ) {}
