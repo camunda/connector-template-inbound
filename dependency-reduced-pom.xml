@@ -10,7 +10,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
+        <version>3.5.5</version>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -83,29 +83,33 @@
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>connector-core</artifactId>
-      <version>8.8.2</version>
+      <version>8.9.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>connector-test</artifactId>
-      <version>8.8.2</version>
+      <version>8.9.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>connector-validation</artifactId>
-          <groupId>io.camunda.connector</groupId>
+          <artifactId>junit-jupiter-api</artifactId>
+          <groupId>org.junit.jupiter</groupId>
         </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>connector-runtime-test</artifactId>
-      <version>8.8.2</version>
+      <version>8.9.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
           <artifactId>connector-runtime-core</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-datatype-feel</artifactId>
           <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
@@ -117,7 +121,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.20.0</version>
+      <version>5.23.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -137,7 +141,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>5.20.0</version>
+      <version>5.23.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -149,7 +153,7 @@
     <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
-      <version>4.2.0</version>
+      <version>4.3.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -161,11 +165,19 @@
     <dependency>
       <groupId>io.camunda</groupId>
       <artifactId>camunda-process-test-spring</artifactId>
-      <version>8.8.2</version>
+      <version>8.9.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
           <artifactId>camunda-process-test-java</artifactId>
+          <groupId>io.camunda</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>camunda-process-test-json-test-cases</artifactId>
+          <groupId>io.camunda</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>camunda-process-test-langchain4j</artifactId>
           <groupId>io.camunda</groupId>
         </exclusion>
         <exclusion>
@@ -229,7 +241,7 @@
     <dependency>
       <groupId>io.camunda.connector</groupId>
       <artifactId>spring-boot-starter-camunda-connectors</artifactId>
-      <version>8.8.2</version>
+      <version>8.9.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -237,12 +249,52 @@
           <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>spring-boot-starter-web</artifactId>
+          <artifactId>http-client</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-boot-starter-webmvc</artifactId>
           <groupId>org.springframework.boot</groupId>
         </exclusion>
         <exclusion>
           <artifactId>spring-boot-starter-actuator</artifactId>
           <groupId>org.springframework.boot</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-boot-health</artifactId>
+          <groupId>org.springframework.boot</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-boot-micrometer-metrics</artifactId>
+          <groupId>org.springframework.boot</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-boot-starter-cache</artifactId>
+          <groupId>org.springframework.boot</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jakarta.annotation-api</artifactId>
+          <groupId>jakarta.annotation</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>micrometer-core</artifactId>
+          <groupId>io.micrometer</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-web</artifactId>
+          <groupId>org.springframework</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>connector-validation</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>connector-runtime-core</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-datatype-feel</artifactId>
+          <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
           <artifactId>camunda-spring-boot-starter</artifactId>
@@ -257,8 +309,20 @@
           <groupId>org.springframework</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>connector-validation</artifactId>
-          <groupId>io.camunda.connector</groupId>
+          <artifactId>spring-beans</artifactId>
+          <groupId>org.springframework</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-context</artifactId>
+          <groupId>org.springframework</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-boot</artifactId>
+          <groupId>org.springframework.boot</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>spring-boot-autoconfigure</artifactId>
+          <groupId>org.springframework.boot</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -266,15 +330,15 @@
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <version.assertj>3.27.6</version.assertj>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <version.connectors>8.8.2</version.connectors>
-    <version.camunda>8.8.2</version.camunda>
     <java.version>21</java.version>
-    <version.awaitility>4.2.0</version.awaitility>
+    <version.awaitility>4.3.0</version.awaitility>
     <maven.compiler.source>21</maven.compiler.source>
-    <version.mockito>5.20.0</version.mockito>
+    <version.mockito>5.23.0</version.mockito>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.target>21</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.junit-jupiter>6.0.0</version.junit-jupiter>
+    <version.connectors>8.9.0</version.connectors>
+    <version.camunda>8.9.0</version.camunda>
   </properties>
 </project>
