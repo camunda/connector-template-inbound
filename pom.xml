@@ -35,8 +35,15 @@
         <!-- Element template generator annotations (compile-time only) -->
         <dependency>
             <groupId>io.camunda.connector</groupId>
-            <artifactId>element-template-generator-core</artifactId>
+            <artifactId>element-template-generator-annotations</artifactId>
             <version>${version.connectors}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.camunda.connector</groupId>
+            <artifactId>connector-validation</artifactId>
+            <version>${version.connectors}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- test dependencies -->
@@ -52,6 +59,13 @@
           <artifactId>connector-runtime-test</artifactId>
           <version>${version.connectors}</version>
           <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
