@@ -88,6 +88,12 @@
     </dependency>
     <dependency>
       <groupId>io.camunda.connector</groupId>
+      <artifactId>connector-validation</artifactId>
+      <version>8.9.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.camunda.connector</groupId>
       <artifactId>connector-test</artifactId>
       <version>8.9.0</version>
       <scope>test</scope>
@@ -109,14 +115,28 @@
           <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>connector-object-mapper</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>jackson-datatype-feel</artifactId>
           <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>connector-validation</artifactId>
+          <artifactId>jackson-datatype-document</artifactId>
           <groupId>io.camunda.connector</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.17</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -236,6 +256,10 @@
           <artifactId>httpcore5</artifactId>
           <groupId>org.apache.httpcomponents.core5</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -250,6 +274,10 @@
         </exclusion>
         <exclusion>
           <artifactId>http-client</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>connector-feel</artifactId>
           <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
@@ -285,15 +313,19 @@
           <groupId>org.springframework</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>connector-validation</artifactId>
-          <groupId>io.camunda.connector</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>connector-runtime-core</artifactId>
           <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>connector-object-mapper</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>jackson-datatype-feel</artifactId>
+          <groupId>io.camunda.connector</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-datatype-document</artifactId>
           <groupId>io.camunda.connector</groupId>
         </exclusion>
         <exclusion>
@@ -323,6 +355,10 @@
         <exclusion>
           <artifactId>spring-boot-autoconfigure</artifactId>
           <groupId>org.springframework.boot</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
         </exclusion>
       </exclusions>
     </dependency>
